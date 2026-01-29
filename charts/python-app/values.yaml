@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: clloris/python-app
   pullPolicy: IfNotPresent
-  tag: 20692dc
+  tag: 97a9bea
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: ''
