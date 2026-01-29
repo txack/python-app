@@ -24,11 +24,45 @@ jobs:
         with:
           push: true
           tags: clloris/python-app:${{ steps.commit.outputs.short }}
+    outputs:
+      commit_id: ${{ steps.commit.outputs.short }}
 
   cd:
     runs-on: self-hosted
     needs: ci
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
+      - name: Clone repo
+        uses: actions/checkout@v4
+      - name: Modify values file
+        shell: bash
+        run: |
+          echo ${{ needs.ci.outputs.commit_id }}
+          pip install yq
+          yq -iy '.image.tag = "${{ needs.ci.outputs.commit_id }}"' 'charts/python-app/values.yaml'
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update image tag to ${{ needs.ci.outputs.commit_id }} in values.yaml"
+      # - uses: actions/checkout@v4
+      #   with:
+      #     persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+      #     fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      # - name: Create local changes
+      #   run: |
+      #     ...
+      # - name: Commit files
+      #   run: |
+      #     git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git config --local user.name "github-actions[bot]"
+      #     git commit -a -m "Add changes"
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     branch: ${{ github.ref }}
       - name: InstallArgoCD CLI
         shell: bash
         run: |
