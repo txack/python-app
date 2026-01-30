@@ -1,0 +1,15 @@
+site_name: 'python-app'
+site_description: 'Main documentation for python-app features and framework APIs'
+repo_url: https://github.com/txack/python-app
+edit_uri: edit/master/docs
+
+plugins:
+  - techdocs-core
+  - redirects:
+      redirect_maps:
+        'index.md': 'docs/index.md'
+
+# For sidebar navigation on https://backstage.io/, see `microsite/sidebars.js`
+nav:
+  - Overview:
+      - Getting Started: 'docs/index.md'
